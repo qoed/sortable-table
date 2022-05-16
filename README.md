@@ -2,7 +2,7 @@
 
 ## Usage
 
-Example usage is setup in the git repo https://github.com/qoed/sortable-table/blob/v0.0.3/src/routes/index.svelte
+Example usage is setup in the git repo https://github.com/qoed/sortable-table/blob/main/src/routes/index.svelte
 
 ```html
 <script lang="ts">
