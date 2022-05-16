@@ -1,11 +1,13 @@
 <script lang="ts">
-	import { SortableTable } from '@qoed/sortable-table';
+	import { SortableTable, TableFilter } from '@qoed/sortable-table';
 
 	let data = [
 		{ name: 'Item 1', description: 'The first item', url: 'https://google.com' },
 		{ name: 'Item 2', description: 'The second item', url: 'https://google.com' },
 		{ name: 'Item 3', description: 'The third item', url: 'https://google.com' }
 	];
+
+	let filteredData = [...data];
 
 	const columns: { label: string; name: string; tooltip?: string }[] = [
 		{
@@ -31,18 +33,27 @@
 			loading = false;
 		}, 1000);
 	}
+
+	function updateData(e: { detail: { data: any; query: string } }) {
+		filteredData = e.detail.data;
+		console.log(`query used was: ${e.detail.query}`);
+	}
+
+	function handleFirstColClick(row: Record<string, any>): void {
+		console.log(row);
+	}
 </script>
 
 <h1>Welcome to SvelteKit</h1>
 <p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
 
 <button type="button" on:click={loadingDemo}>Demo loading state</button>
+
+<TableFilter {data} on:query={updateData} />
 <SortableTable
+	data={filteredData}
 	{columns}
-	{data}
 	initiallySortByColumn="name"
-	onFirstColClick={(row) => {
-		console.log(row);
-	}}
+	onFirstColClick={handleFirstColClick}
 	{loading}
 />

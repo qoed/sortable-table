@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
+	import IonFilter from './icons/IonFilter.svelte';
 
-	export let data: { [key: string]: any }[];
+	export let data: Record<string, any>[];
 	export let columns: { name: string; label: string }[] = Object.keys(data[0]).map((key) => {
 		return { name: key, label: key };
 	});
@@ -13,7 +14,7 @@
 
 	const dispatch = createEventDispatcher();
 	let filterInput: HTMLElement;
-	let filteredData: { [key: string]: any }[];
+	let filteredData: Record<string, any>[];
 	let filterQuery: string = '';
 	let filterTimeoutId: any = null;
 	let filterBy = columns[0].name;
@@ -23,13 +24,12 @@
 		if (init) {
 			init = false;
 		} else {
-			let updatedFilterBy = filterBy;
 			let query = filterQuery.toLowerCase();
-			runFilter(query);
+			runFilter(query, filterBy);
 		}
 	}
 
-	function runFilter(query: string) {
+	function runFilter(query: string, filterBy: string) {
 		if (filterTimeoutId) {
 			clearTimeout(filterTimeoutId);
 		}
@@ -40,7 +40,7 @@
 			if (query.length === 0) {
 				filteredData = [...data];
 			}
-			dispatch('query', filteredData);
+			dispatch('query', { data: filteredData, query });
 			filterTimeoutId = null;
 		}, 350);
 	}
@@ -49,14 +49,9 @@
 <div class="filter-container" style={cssVarStyles}>
 	<div on:click={() => filterInput.focus()} style="position: relative; cursor: text;">
 		<div style="color:rgb(156 163 175);">
-			<svg
-				width="1.2em"
-				height="1.2em"
-				preserveAspectRatio="xMidYMid meet"
-				viewBox="0 0 24 24"
-				class="filter-icon"
-				><path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z" fill="currentColor" /></svg
-			>
+			<div class="filter-icon">
+				<IonFilter />
+			</div>
 			{#if !filterQuery}
 				<p class="filter-placeholder">filter</p>
 			{/if}
@@ -81,6 +76,9 @@
 </div>
 
 <style>
+	p {
+		margin: 0;
+	}
 	.filter-container {
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
@@ -105,20 +103,22 @@
 	.filter-icon {
 		left: 0.75rem;
 		font-size: 1.25rem /* 20px */;
-		line-height: 1.75rem /* 28px */;
+		display: flex;
 	}
 	.filter-placeholder {
 		left: 2.75rem;
-		font-size: 0.875rem /* 14px */;
-		line-height: 1.25rem /* 20px */;
+		font: inherit;
+		font-size: inherit;
+		line-height: inherit;
 	}
 	.filter {
 		font: inherit;
-		font-size: small;
+		font-size: inherit;
+		line-height: inherit;
 		color: var(--font-color, currentColor);
 		padding: 0.5rem 1rem 0.5rem 2.5rem;
 		border-radius: 50rem;
-		border: var(--border-width, 1px) solid var(--border-color, rgba(0, 0, 0, 0.2));
+		border: var(--border-width, 2px) solid var(--border-color, rgba(0, 0, 0, 0.2));
 		background-color: var(--query-field-bg, transparent);
 	}
 	.filter:focus-visible {
