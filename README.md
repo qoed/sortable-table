@@ -1,5 +1,7 @@
 # sortable-table
 
+[![npm (scoped)](https://img.shields.io/npm/v/@qoed/sortable-table?color=d76525)](https://www.npmjs.com/package/@qoed/sortable-table)
+
 ## Usage
 
 Example usage is setup in the git repo https://github.com/qoed/sortable-table/blob/main/src/routes/index.svelte
