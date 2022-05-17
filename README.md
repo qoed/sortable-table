@@ -24,20 +24,26 @@ Example usage is setup in the git repo https://github.com/qoed/sortable-table/bl
 
 ```html
 <script lang="ts">
+	import type { CSSVars, TableColumn } from '@qoed/sortable-table';
 	import { SortableTable, TableFilter } from '@qoed/sortable-table';
 
 	let data = [
-		{ name: 'Item 1', description: 'The first item', url: 'https://google.com' },
+		{
+			name: 'Item 1',
+			description: 'The first item',
+			url: 'https://kit.svelte.dev/docs/introduction'
+		},
 		{ name: 'Item 2', description: 'The second item', url: 'https://google.com' },
 		{ name: 'Item 3', description: 'The third item', url: 'https://google.com' }
 	];
 
 	let filteredData = [...data];
 
-	const columns: { label: string; name: string; tooltip?: string }[] = [
+	const columns: TableColumn[] = [
 		{
 			label: 'Name',
-			name: 'name'
+			name: 'name',
+			tooltip: 'url'
 		},
 		{
 			label: 'Description',
@@ -49,6 +55,12 @@ Example usage is setup in the git repo https://github.com/qoed/sortable-table/bl
 			tooltip: 'url'
 		}
 	];
+
+	let cssVars: CSSVars = {
+		'--color-first-column': 'RoyalBlue',
+		'--text-decoration-first-column': 'underline',
+		'--cursor-first-column': 'pointer'
+	};
 
 	let loading = false;
 
@@ -69,13 +81,19 @@ Example usage is setup in the git repo https://github.com/qoed/sortable-table/bl
 	}
 </script>
 
+<h1>Welcome to SvelteKit</h1>
+<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+
+<button type="button" on:click="{loadingDemo}">Demo loading state</button>
+
 <TableFilter {data} on:query="{updateData}" />
 <SortableTable
 	data="{filteredData}"
-	columns="{columns}"
+	{columns}
 	initiallySortByColumn="name"
 	onFirstColClick="{handleFirstColClick}"
-	loading="{loading}"
+	{loading}
+	{cssVars}
 />
 ```
 
