@@ -3,14 +3,15 @@
 	import IonArrowDownB from '$lib/icons/IonArrowDownB.svelte';
 	import IonArrowUpB from '$lib/icons/IonArrowUpB.svelte';
 	import LoadingSpinner from '$lib/icons/LoadingSpinner.svelte';
+	import type { CSSVars, TableColumn } from '$lib/types';
 
 	export let data: Record<string, any>[];
-	export let columns: { name: string; label: string; tooltip?: string }[];
+	export let columns: TableColumn[];
 	export let initiallySortByColumn: string;
 	export let initialSortDirection: 'asc' | 'desc' = 'asc';
 	export let onRowClick: ((row: Record<string, any>) => void) | null = null;
 	export let onFirstColClick: ((row: Record<string, any>) => void) | null = null;
-	export let cssVars: Record<string, any> = {};
+	export let cssVars: CSSVars = {};
 	export let loading: boolean = false;
 
 	$: cssVarStyles = Object.entries(cssVars)
@@ -99,6 +100,9 @@
 						{#if i === 0}
 							<td class="first-col" on:click={() => handleFirstColClick(row)}>
 								{getValue(row, col.name)}
+								{#if col.tooltip}
+									<Tooltip text={row[col.tooltip]} />
+								{/if}
 							</td>
 						{:else}
 							<td class="data-col">
@@ -144,7 +148,7 @@
 		word-break: break-all;
 	} */
 	.col-headers {
-		border-bottom: 1px solid var(--border-color, rgba(0, 0, 0, 0.2));
+		border-bottom: 1px solid var(--color-column-header-border, rgba(0, 0, 0, 0.2));
 	}
 	.col-header-container {
 		display: flex;
@@ -154,15 +158,16 @@
 		transition: background-color 0.3s;
 	}
 	.row:nth-child(2n + 2) {
-		background-color: var(--row-color, rgb(240, 239, 239));
+		background-color: var(--color-row, rgb(240, 239, 239));
 	}
 	.row:hover {
-		background-color: var(--row-hover-color, rgb(210, 210, 210));
+		background-color: var(--color-row-hover, rgb(210, 210, 210));
 	}
 	.first-col {
-		text-decoration: var(--first-col-text-decoration, none);
-		cursor: var(--first-col-cursor, text);
-		color: var(--first-col-color, inherit);
+		position: relative;
+		text-decoration: var(--text-decoration-first-column, none);
+		cursor: var(--cursor-first-column, text);
+		color: var(--color-first-column, inherit);
 	}
 	.data-col {
 		position: relative;
