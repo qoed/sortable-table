@@ -7,6 +7,9 @@
 
 	let tooltipEl: HTMLSpanElement;
 	let visible = false;
+	let renderLeft = true;
+	let tooltipHorizontalPosition = 0;
+	let tooltipArrowHorizontalPosition = 0;
 	let renderTop = true;
 
 	function doesTooltipFit(tooltip: HTMLSpanElement) {
@@ -21,20 +24,31 @@
 			const startingPosition = parentRect.top - tooltipRect.height;
 			const threshold = 20;
 
+			// controlls if the tooltip renders to the left of the cell depending on if it fits
+			if (tooltipRect.left < 0) {
+				tooltipHorizontalPosition = tooltipRect.width / 2;
+				tooltipArrowHorizontalPosition = 10;
+				renderLeft = false;
+			} else {
+				tooltipArrowHorizontalPosition = 50;
+				renderLeft = true;
+			}
+			// controlls if the tooltip renders on top or bottom of the cell, depending on where it fits
 			if (startingPosition - threshold < tableRect.top) {
 				renderTop = false;
-				return;
+			} else {
+				renderTop = true;
 			}
-			renderTop = true;
 		}
 	}
 
 	function handleMouseEnter(ev: MouseEvent) {
-		visible = true;
 		doesTooltipFit(tooltipEl);
+		visible = true;
 	}
 	function handleMouseLeave(ev: MouseEvent) {
 		visible = false;
+		tooltipHorizontalPosition = 0;
 	}
 
 	function tooltipCheck(element: HTMLSpanElement, destroy: boolean = false) {
@@ -65,10 +79,13 @@
 
 <span
 	bind:this={tooltipEl}
+	style={`--tooltipHorizontalPosition: ${tooltipHorizontalPosition}px; --tooltipArrowHorizontalPosition: ${tooltipArrowHorizontalPosition}%;`}
 	class="tooltip-text"
 	class:visible
 	class:position-bottom={!renderTop}
 	class:position-top={renderTop}
+	class:position-left={renderLeft}
+	class:position-right={!renderLeft}
 >
 	{text}
 </span>
@@ -86,7 +103,8 @@
 		position: absolute;
 		z-index: 1;
 
-		left: 50%;
+		/* left: 2rem; */
+
 		transform: translateX(-50%);
 
 		/* Fade in tooltip */
@@ -99,6 +117,14 @@
 
 	.position-bottom {
 		top: 100%;
+	}
+
+	.position-left {
+		left: 2rem;
+	}
+
+	.position-right {
+		left: var(--tooltipHorizontalPosition);
 	}
 
 	.position-top::after {
@@ -119,7 +145,7 @@
 		content: '';
 		position: absolute;
 
-		left: 50%;
+		left: var(--tooltipArrowHorizontalPosition);
 
 		border-style: solid;
 		border-color: #555 transparent transparent transparent;
