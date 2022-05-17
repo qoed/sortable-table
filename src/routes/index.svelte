@@ -1,18 +1,24 @@
 <script lang="ts">
+	import type { CSSVars, TableColumn } from '@qoed/sortable-table';
 	import { SortableTable, TableFilter } from '@qoed/sortable-table';
 
 	let data = [
-		{ name: 'Item 1', description: 'The first item', url: 'https://google.com' },
+		{
+			name: 'Item 1',
+			description: 'The first item',
+			url: 'https://kit.svelte.dev/docs/introduction'
+		},
 		{ name: 'Item 2', description: 'The second item', url: 'https://google.com' },
 		{ name: 'Item 3', description: 'The third item', url: 'https://google.com' }
 	];
 
 	let filteredData = [...data];
 
-	const columns: { label: string; name: string; tooltip?: string }[] = [
+	const columns: TableColumn[] = [
 		{
 			label: 'Name',
-			name: 'name'
+			name: 'name',
+			tooltip: 'url'
 		},
 		{
 			label: 'Description',
@@ -24,6 +30,12 @@
 			tooltip: 'url'
 		}
 	];
+
+	let cssVars: CSSVars = {
+		'--color-first-column': 'RoyalBlue',
+		'--text-decoration-first-column': 'underline',
+		'--cursor-first-column': 'pointer'
+	};
 
 	let loading = false;
 
@@ -56,4 +68,5 @@
 	initiallySortByColumn="name"
 	onFirstColClick={handleFirstColClick}
 	{loading}
+	{cssVars}
 />
