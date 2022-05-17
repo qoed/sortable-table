@@ -8,7 +8,11 @@
 			description: 'The first item',
 			url: 'https://kit.svelte.dev/docs/introduction'
 		},
-		{ name: 'Item 2', description: 'The second item', url: 'https://google.com' },
+		{
+			name: 'Item 2',
+			description: 'The second item',
+			url: 'https://svelte.dev/docs#before-we-begin'
+		},
 		{ name: 'Item 3', description: 'The third item', url: 'https://google.com' }
 	];
 
@@ -17,8 +21,7 @@
 	const columns: TableColumn[] = [
 		{
 			label: 'Name',
-			name: 'name',
-			tooltip: 'url'
+			name: 'name'
 		},
 		{
 			label: 'Description',

@@ -1,112 +1,47 @@
 <script lang="ts">
 	import { browser } from '$app/env';
-
-	import { onDestroy, onMount } from 'svelte';
+	import { tooltip } from '$lib/hover';
 
 	export let text: string;
 
-	let tooltipEl: HTMLSpanElement;
 	let visible = false;
-	let renderLeft = true;
-	let tooltipHorizontalPosition = 0;
-	let tooltipArrowHorizontalPosition = 0;
-	let renderTop = true;
+	let tooltipPosition = {
+		renderTop: true
+	};
 
-	function doesTooltipFit(tooltip: HTMLSpanElement) {
-		if (tooltip) {
-			// the element this tooltip is rendered for
-			const parentRect = tooltip.parentElement!.getBoundingClientRect();
-			// tooltip itself
-			const tooltipRect = tooltip.getBoundingClientRect();
-			// the parent table
-			const tableRect = document.querySelector('table')!.getBoundingClientRect();
-
-			const startingPosition = parentRect.top - tooltipRect.height;
-			const threshold = 20;
-
-			// controlls if the tooltip renders to the left of the cell depending on if it fits
-			if (tooltipRect.left < 0) {
-				tooltipHorizontalPosition = tooltipRect.width / 2;
-				tooltipArrowHorizontalPosition = 10;
-				renderLeft = false;
-			} else {
-				tooltipArrowHorizontalPosition = 50;
-				renderLeft = true;
-			}
-			// controlls if the tooltip renders on top or bottom of the cell, depending on where it fits
-			if (startingPosition - threshold < tableRect.top) {
-				renderTop = false;
-			} else {
-				renderTop = true;
-			}
-		}
-	}
-
-	function handleMouseEnter(ev: MouseEvent) {
-		doesTooltipFit(tooltipEl);
+	function handleShow(ev: CustomEvent) {
+		// doesTooltipFit(tooltipEl);
+		tooltipPosition = ev.detail;
 		visible = true;
 	}
-	function handleMouseLeave(ev: MouseEvent) {
+	function handleHide() {
 		visible = false;
-		tooltipHorizontalPosition = 0;
 	}
-
-	function tooltipCheck(element: HTMLSpanElement, destroy: boolean = false) {
-		if (element) {
-			if (!destroy) {
-				element.parentElement!.addEventListener('mouseenter', handleMouseEnter);
-				element.parentElement!.addEventListener('mouseleave', handleMouseLeave);
-				return;
-			}
-
-			element.parentElement!.removeEventListener('mouseenter', handleMouseEnter);
-			element.parentElement!.removeEventListener('mouseleave', handleMouseLeave);
-		}
-	}
-
-	onMount(() => {
-		if (browser) {
-			tooltipCheck(tooltipEl);
-		}
-	});
-
-	onDestroy(() => {
-		if (browser) {
-			tooltipCheck(tooltipEl, true);
-		}
-	});
 </script>
 
 <span
-	bind:this={tooltipEl}
-	style={`--tooltipHorizontalPosition: ${tooltipHorizontalPosition}px; --tooltipArrowHorizontalPosition: ${tooltipArrowHorizontalPosition}%;`}
-	class="tooltip-text"
+	use:tooltip
+	on:show={handleShow}
+	on:hide={handleHide}
+	class="tooltip-container"
 	class:visible
-	class:position-bottom={!renderTop}
-	class:position-top={renderTop}
-	class:position-left={renderLeft}
-	class:position-right={!renderLeft}
+	class:position-bottom={!tooltipPosition.renderTop}
+	class:position-top={tooltipPosition.renderTop}
 >
 	{text}
 </span>
 
 <style>
-	.tooltip-text {
+	.tooltip-container {
+		position: absolute;
+		left: 0;
 		visibility: hidden;
 		background-color: #555;
 		color: #fff;
 		text-align: center;
 		padding: 5px 8px;
 		border-radius: 6px;
-
-		/* Position the tooltip text */
-		position: absolute;
 		z-index: 1;
-
-		/* left: 2rem; */
-
-		transform: translateX(-50%);
-
 		/* Fade in tooltip */
 		opacity: 0;
 		transition: opacity 0.3s;
@@ -117,14 +52,6 @@
 
 	.position-bottom {
 		top: 100%;
-	}
-
-	.position-left {
-		left: 2rem;
-	}
-
-	.position-right {
-		left: var(--tooltipHorizontalPosition);
 	}
 
 	.position-top::after {
@@ -141,12 +68,10 @@
 	}
 
 	/* Tooltip arrow */
-	.tooltip-text::after {
+	.tooltip-container::after {
 		content: '';
 		position: absolute;
-
-		left: var(--tooltipArrowHorizontalPosition);
-
+		left: 10%;
 		border-style: solid;
 		border-color: #555 transparent transparent transparent;
 	}

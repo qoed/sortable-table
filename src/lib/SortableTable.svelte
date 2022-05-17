@@ -99,8 +99,10 @@
 					{#each columns as col, i}
 						{#if i === 0}
 							<td class="first-col" on:click={() => handleFirstColClick(row)}>
-								{getValue(row, col.name)}
-								{#if col.tooltip}
+								<div>
+									{getValue(row, col.name)}
+								</div>
+								{#if col.tooltip && row[col.tooltip].length > 30}
 									<Tooltip text={row[col.tooltip]} />
 								{/if}
 							</td>
