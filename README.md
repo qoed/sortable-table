@@ -99,4 +99,44 @@ Example usage is setup in the git repo https://github.com/qoed/sortable-table/bl
 
 ## Configuration
 
-TODO
+### Props
+
+#### data: Record<string, any>[]
+
+The data to display in the table.
+
+#### columns: TableColumn[]
+
+The columns to display, should match field names from the _data_. The interface is exposed and can be imported in your app:
+
+```javascript
+import type { TableColumn } from '@qoed/sortable-table';
+```
+
+#### initiallySortByColumn: string
+
+Should be a field name from the _data_, will be used to select a column that the data is initially sorted by.
+
+#### initialSortDirection: asc|desc
+
+Optional, defaults to 'asc', can be set to 'desc'. Controlls the initial sort direction.
+
+#### onRowClick: (row: Record<string, any>) => void
+
+Optional, use this if you want to execute some logic when a table row is clicked. The row itself is passed as the first argument to the function.
+
+#### onFirstColClick: (row: Record<string, any>) => void
+
+Optional, use this if you want to execute some logic when the first column of a table row is clicked. The row itself is passed as the first argument to the function.
+
+#### cssVars: CSSVars
+
+Optional, use this to style elements of the table. The interface is exposed and can be imported in your app:
+
+```javascript
+import type { CSSVars } from '@qoed/sortable-table';
+```
+
+#### loading: boolean
+
+Optional, use this to display a loading spinner while table content is loading.
