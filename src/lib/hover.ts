@@ -1,18 +1,16 @@
 export function tooltip(node: HTMLSpanElement) {
-	function calculatePosition(tooltip: HTMLSpanElement) {
+	const td = node.parentElement!;
+
+	function calculatePosition() {
 		let renderTop;
 		// the table data cell this tooltip is rendered for
-		const tdRect = tooltip.parentElement!.getBoundingClientRect();
+		const tdRect = td.getBoundingClientRect();
 		// tooltip itself
-		const tooltipRect = tooltip.getBoundingClientRect();
-		// the parent table
-		const tableRect = document.querySelector('table')!.getBoundingClientRect();
-
+		const tooltipRect = node.getBoundingClientRect();
 		const startingPosition = tdRect.top - tooltipRect.height;
-		const threshold = 20;
 
 		// controlls if the tooltip renders on top or bottom of the cell, depending on where it fits
-		if (startingPosition - threshold < tableRect.top) {
+		if (startingPosition < 0) {
 			renderTop = false;
 		} else {
 			renderTop = true;
@@ -24,7 +22,7 @@ export function tooltip(node: HTMLSpanElement) {
 	}
 
 	const handleMouseEnter = () => {
-		const tooltipPosition = calculatePosition(node);
+		const tooltipPosition = calculatePosition();
 		node.dispatchEvent(new CustomEvent('show', { detail: tooltipPosition }));
 	};
 
@@ -32,14 +30,14 @@ export function tooltip(node: HTMLSpanElement) {
 		node.dispatchEvent(new CustomEvent('hide'));
 	};
 
-	// register event listeners on td elements
-	node.parentElement!.addEventListener('mouseenter', handleMouseEnter, true);
-	node.parentElement!.addEventListener('mouseleave', handleMouseLeave);
+	// register event listeners on td element
+	td.addEventListener('mouseenter', handleMouseEnter, true);
+	td.addEventListener('mouseleave', handleMouseLeave);
 
 	return {
 		destroy() {
-			node.parentElement!.removeEventListener('mouseenter', handleMouseEnter);
-			node.parentElement!.removeEventListener('mouseleave', handleMouseLeave);
+			td.removeEventListener('mouseenter', handleMouseEnter);
+			td.removeEventListener('mouseleave', handleMouseLeave);
 		}
 	};
 }

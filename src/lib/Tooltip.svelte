@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { browser } from '$app/env';
 	import { tooltip } from '$lib/hover';
 
 	export let text: string;
@@ -10,7 +9,6 @@
 	};
 
 	function handleShow(ev: CustomEvent) {
-		// doesTooltipFit(tooltipEl);
 		tooltipPosition = ev.detail;
 		visible = true;
 	}
@@ -36,11 +34,11 @@
 		position: absolute;
 		left: 0;
 		visibility: hidden;
-		background-color: #555;
+		background-color: #000;
 		color: #fff;
 		text-align: center;
-		padding: 5px 8px;
-		border-radius: 6px;
+		padding: 0.75rem 1rem;
+		border-radius: 0.5rem;
 		z-index: 1;
 		/* Fade in tooltip */
 		opacity: 0;
@@ -55,15 +53,15 @@
 	}
 
 	.position-top::after {
-		top: 100%;
-		margin-left: -5px;
-		border-width: 5px;
+		top: 98%;
+		margin-left: -10px;
+		border-width: 10px;
 	}
 
 	.position-bottom::after {
-		bottom: 100%;
-		margin-left: -5px;
-		border-width: 5px;
+		bottom: 98%;
+		margin-left: -10px;
+		border-width: 10px;
 		transform: rotate(180deg);
 	}
 
@@ -73,7 +71,7 @@
 		position: absolute;
 		left: 10%;
 		border-style: solid;
-		border-color: #555 transparent transparent transparent;
+		border-color: #000 transparent transparent transparent;
 	}
 
 	/* Show the tooltip text when you mouse over the tooltip container */
