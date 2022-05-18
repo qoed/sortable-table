@@ -78,11 +78,13 @@
 						<span>
 							{col.label}
 						</span>
-						{#if previouslyClickedColumn === col.name && direction === 'asc'}
-							<IonArrowUpB />
-						{:else if previouslyClickedColumn === col.name && direction === 'desc'}
-							<IonArrowDownB />
-						{/if}
+						<span class="sort-icon">
+							{#if previouslyClickedColumn === col.name && direction === 'asc'}
+								<IonArrowUpB />
+							{:else if previouslyClickedColumn === col.name && direction === 'desc'}
+								<IonArrowDownB />
+							{/if}
+						</span>
 					</div>
 				</th>
 			{/each}
@@ -176,5 +178,9 @@
 	}
 	.data-col__content {
 		min-width: max-content;
+	}
+	.sort-icon {
+		width: 16px;
+		height: 16px;
 	}
 </style>
